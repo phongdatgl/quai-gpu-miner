@@ -876,6 +876,9 @@ void EthStratumClient::processResponse(Json::Value& responseObject)
                     jReq["params"] = Json::Value(Json::arrayValue);
                     send(jReq);
 
+                    std::string enonce = jResult.get(Json::Value::ArrayIndex(1), "").asString();
+                    if (!enonce.empty()) processExtranonce(enonce);
+
                     // Eventually request authorization
                     m_authpending.store(true, std::memory_order_relaxed);
                     jReq["id"] = unsigned(3);
